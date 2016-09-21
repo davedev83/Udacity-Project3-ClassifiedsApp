@@ -1,0 +1,89 @@
+{% include "header.html" %}
+
+<div class="jumbotron clearfix subpage">
+  <div class="col-md-10">
+    <h1>{{title}}</h1>
+  </div>
+
+  <div class="col-md-2">
+    {%if creator %}
+    <figure class="creator">
+      <img src="{{ creator.picture}}">
+      <figcaption>{{ creator.name }}</figcaption>
+    </figure>
+    {% endif %}
+
+  </div>
+</div>
+
+<div class = 'flash'>
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+
+    <ul>
+      {% for message in messages %}
+      <li> <strong> {{ message }} </strong> </li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+  {% endwith %}
+</div>
+
+<div class="row" style="margin-bottom:20px;">
+  <div class="col-md-12">
+      <h4>{{category.name}}
+      <a class="btn btn-default" href="{{ url_for('addItem', category_id=category.id) }}" role="button">Add item</a>
+      <a class="btn btn-default" href="{{ url_for('editCategory', category_id=category.id) }}" role="button">Edit Category</a>
+      <a class="btn btn-default" href="{{ url_for('deleteCategory', category_id=category.id) }}" role="button">Delete Category</a>
+      </h4>
+  </div>
+</div>
+
+<div class="row">
+
+  <div class="col-md-3">
+    <ul class="list-group">
+      <li class="list-group-item list-group-item-info"><b>Browse Categories</b></li>
+      {% for category in categories %}
+      <a class="list-group-item" href = "{{ url_for('categoryItems', category_id=category.id) }}">
+        {{category.name}} ({{getCategoryCount(category.id)}})
+      </a>
+      {% endfor %}
+      <a class="list-group-item" href = "{{ url_for('addCategory') }}">Add new category</a>
+    </ul>
+  </div>
+
+  <div class="col-md-9">
+
+    {% for item in items %}
+    <a href="{{ url_for('showItem', item_id=item.id) }}">
+      <div class="panel panel-default">
+        <div class="panel-heading"><strong>{{item.category.name}} &raquo;  {{item.name}}</strong></div>
+        <div class="panel-body">
+          <div class="row">
+            <div class="col-md-2">
+              {% if item.image %}
+              <img width="100%" src="{{item.image}}" />
+              {% else %}
+              <img width="100%" src="/static/placeholder.png" />
+              {% endif %}
+
+            </div>
+            <div class="col-md-8">
+              {% if item.description|length > 200 %}
+              <p>{{ item.description[:200]|safe + '...' }}</p>
+              {% else %}
+              <p>{{ item.description|safe }}</p>
+              {% endif %}
+            </div>
+            <div class="col-md-2"><h3>{{item.price}}</h3></div>
+          </div>
+        </div>
+      </div>
+    </a>
+    {% endfor %}
+  </div>
+
+</div>
+
+{% include "footer.html" %}

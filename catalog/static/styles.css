@@ -1,0 +1,44 @@
+body{margin-top:20px; background-color: rgb(222, 222, 222)}
+
+.container{}
+
+.bg-warning{list-style: none; padding:10px; margin:-20px 0 10px 0 }
+
+.jumbotron
+{
+  background: url('Photo-Classifieds-Credit-Carin-Araujo.jpg');
+}
+.subpage{background:rgb(189, 189, 189); border-bottom: 10px solid rgb(102, 81, 153);}
+
+.jumbotron h1, .jumbotron h2
+{
+  text-shadow: 2px 2px 2px #FFFFFF;
+  font-family: 'Bungee', cursive !important;
+  font-size: 3em
+}
+
+.jumbotron h2{font-size: 2em}
+
+.list-group a:hover{color:rgb(1, 144, 235)}
+
+.creator
+{
+	padding-right: 20px;
+	margin-top: 0px;
+	text-align: right;
+}
+.creator img
+{
+	width: 100px;
+	border-radius: 50%;
+}
+.creator figcaption
+{
+	font-size: 14px;
+	color: white;
+	font-weight: 400;
+	margin-top: 10px;
+  background-color: rgba(0, 0, 0, 0.8);
+  display: inline-block;
+  padding:3px;
+}

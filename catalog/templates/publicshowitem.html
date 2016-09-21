@@ -1,0 +1,64 @@
+{% include "header.html" %}
+
+<div class="jumbotron clearfix subpage">
+  <div class="col-md-10">
+    <h1>{{title}}</h1>
+  </div>
+
+  <div class="col-md-2">
+  {%if creator %}
+    <figure class="creator">
+      <img src="{{ creator.picture}}">
+      <figcaption>{{ creator.name }}</figcaption>
+    </figure>
+  {% endif %}
+
+  </div>
+</div>
+
+<div class = 'flash'>
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+
+    <ul>
+      {% for message in messages %}
+      <li> <strong> {{ message }} </strong> </li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+  {% endwith %}
+
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+
+  <div class="panel panel-default">
+    <div class="panel-body">
+
+      <div class="col-xs-3 category-list">
+        {% if item.image %}
+        <img width="100%" src="{{item.image}}" />
+        {% else %}
+        <img width="100%" src="/static/placeholder.png" />
+        {% endif %}
+      </div>
+
+      <div class="col-xs-9">
+        <p><b>Contact Name:</b></p>
+        <p>{{item.contact_name}}</p>
+        <p><b>Contact Phone:</b></p>
+        <p>{{item.contact_number}}</p>
+        <p><b>Price:</b></p>
+        <p>{{item.price}}</p>
+        <p><b>Description:</b></p>
+        <p>{{item.description|safe}}</p>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+</div>
+
+{% include "footer.html" %}
