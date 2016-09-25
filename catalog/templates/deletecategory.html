@@ -36,6 +36,7 @@
   <div class="col-xs-12">
 
     <form action="{{ url_for('deleteCategory', category_id=category.id) }}" method='post'>
+      <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
       <p>Are you sure you want to delete <i>{{category.name}}</i>?</p>
       <p><input type="submit" class="btn btn-default" value="Confirm"></p>
     </form>

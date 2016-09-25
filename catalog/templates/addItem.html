@@ -33,8 +33,8 @@
 <div class="row">
   <div class="container">
 
-    <form action="{{ url_for('addItem', category_id = category.id) }}" method='post'>
-
+    <form action="{{ url_for('addItem', category_id=category.id) }}" method='post'>
+      <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
       <div class="form-group">
         <label for="name">Item Title</label>
         <input name="name"  class="form-control" placeholder="Item Title" size="30">

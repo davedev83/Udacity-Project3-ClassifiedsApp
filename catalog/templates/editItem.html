@@ -36,7 +36,7 @@
   <div class="col-xs-12">
 
     <form action="{{ url_for('editItem', item_id=item.id) }}" method='post'>
-
+      <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
       <div class="form-group">
         <label for="name">Item Title</label>
         <input name="name"  class="form-control" placeholder="Item Title" value="{{item.name}}" size="30">
