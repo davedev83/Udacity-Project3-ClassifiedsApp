@@ -1,5 +1,6 @@
+from functools import wraps
 from flask import Flask, render_template, request, redirect, jsonify, \
-    url_for, flash
+    url_for, flash, g
 from flask.ext.seasurf import SeaSurf
 from sqlalchemy import create_engine, asc, desc, func
 from sqlalchemy.orm import sessionmaker
@@ -27,6 +28,17 @@ Base.metadata.bind = engine
 
 DBSession = sessionmaker(bind=engine)
 session = DBSession()
+
+
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if 'email' in login_session:
+            return f(*args, **kwargs)
+        else:
+            flash("You are not allowed to access there")
+            return redirect('/login')
+    return decorated_function
 
 
 @app.route('/login')
@@ -344,10 +356,9 @@ def categoryItems(category_id):
 
 
 @app.route('/classifieds/category/new', methods=['GET', 'POST'])
+@login_required
 def addCategory():
     """ Allows logged in users to create a new category """
-    if 'username' not in login_session:
-        return redirect('/login')
     if request.method == 'POST':
         category = Category(name=request.form['name'],
                             user_id=login_session['user_id'])
@@ -364,11 +375,11 @@ def addCategory():
 
 @app.route('/classifieds/category/<int:category_id>/edit',
            methods=['GET', 'POST'])
+@login_required
 def editCategory(category_id):
     """ Allows logged in users to edit categories they own """
+
     category = session.query(Category).filter_by(id=category_id).one()
-    if 'username' not in login_session:
-        return redirect('/login')
     if category.user_id != login_session['user_id']:
         return "<script>function myFunction() { \
                 alert('You are not authorized to edit this category. \
@@ -390,12 +401,12 @@ def editCategory(category_id):
 
 @app.route('/classifieds/category/<int:category_id>/delete',
            methods=['GET', 'POST'])
+@login_required
 def deleteCategory(category_id):
     """ Allows logged in users to delete categories they own """
     category = session.query(Category).filter_by(id=category_id).one()
     itemCount = session.query(Item).filter_by(category_id=category_id).count()
-    if 'username' not in login_session:
-        return redirect('/login')
+
     if category.user_id != login_session['user_id']:
         return "<script>function myFunction() { \
             alert('You are not authorized to delete this category.'); \
@@ -421,10 +432,10 @@ def deleteCategory(category_id):
 
 
 @app.route('/classifieds/<int:category_id>/items/new', methods=['GET', 'POST'])
+@login_required
 def addItem(category_id):
     """ Allows logged in users to add items in a given category """
-    if 'username' not in login_session:
-        return redirect('/login')
+
     category = session.query(Category).filter_by(id=category_id).one()
     if request.method == 'POST':
         newItem = Item(name=request.form['name'],
@@ -464,11 +475,11 @@ def showItem(item_id):
 
 
 @app.route('/classifieds/item/<int:item_id>/edit', methods=['GET', 'POST'])
+@login_required
 def editItem(item_id):
     """ Handles how users edit items they own """
+
     item = session.query(Item).filter_by(id=item_id).one()
-    if 'username' not in login_session:
-        return redirect('/login')
     if item.user_id != login_session['user_id']:
         return "<script>function myFunction() {\
                     alert('You are not authorized to edit this item.');\
@@ -500,12 +511,12 @@ def editItem(item_id):
 
 
 @app.route('/classifieds/item/<int:item_id>/delete', methods=['GET', 'POST'])
+@login_required
 def deleteItem(item_id):
     """ Handles how users delete items they own """
+    
     item = session.query(Item).filter_by(id=item_id).one()
     title = "Remove item"
-    if 'username' not in login_session:
-        return redirect('/login')
     if item.user_id != login_session['user_id']:
         return "<script>function myFunction() { \
         alert('You are not authorized to delete this category.'); \
