@@ -132,6 +132,7 @@ def fbconnect():
 @app.route('/fbdisconnect')
 def fbdisconnect():
     """ Handles facebook disconnect """
+
     facebook_id = login_session['facebook_id']
     # The access token must me included to successfully logout
     access_token = login_session['access_token']
@@ -145,6 +146,7 @@ def fbdisconnect():
 @app.route('/gconnect', methods=['POST'])
 def gconnect():
     """ Handles google login """
+
     # Validate state token
     if request.args.get('state') != login_session['state']:
         response = make_response(json.dumps('Invalid state parameter.'), 401)
@@ -242,6 +244,7 @@ def gconnect():
 
 def createUser(login_session):
     """ Handles user creation after login and returns the user id """
+
     newUser = User(name=login_session['username'], email=login_session[
                    'email'], picture=login_session['picture'])
     session.add(newUser)
@@ -252,12 +255,14 @@ def createUser(login_session):
 
 def getUserInfo(user_id):
     """ Returns user object """
+
     user = session.query(User).filter_by(id=user_id).one()
     return user
 
 
 def getUserID(email):
     """ Returns user id from the email address """
+
     try:
         user = session.query(User).filter_by(email=email).one()
         return user.id
@@ -270,6 +275,7 @@ def getUserID(email):
 @app.route('/gdisconnect')
 def gdisconnect():
     """ Disconnects google session """
+
     credentials = login_session.get('credentials')
     if credentials is None:
         response = make_response(
@@ -296,6 +302,7 @@ def gdisconnect():
 @app.route('/classifieds/category/<int:category_id>/JSON')
 def categoryItemsJSON(category_id):
     """ Returns all items for a given category in json format """
+
     items = session.query(Item).filter_by(category_id=category_id). \
         order_by(desc(Item.id)).all()
     return jsonify(items=[i.serialize for i in items])
@@ -304,6 +311,7 @@ def categoryItemsJSON(category_id):
 @app.route('/classifieds/item/<int:item_id>/JSON')
 def itemJson(item_id):
     """ Returns a single item in json format """
+
     item = session.query(Item).filter_by(id=item_id).one()
     return jsonify(item=item.serialize)
 
@@ -315,6 +323,7 @@ def itemJson(item_id):
 
 def getCategoryCount(category_id):
     """ Returns the number of items in a category by category id """
+
     count = session.query(Item).filter_by(category_id=category_id).count()
     return count
 
@@ -327,6 +336,7 @@ def getCategoryCount(category_id):
 @app.route('/classifieds/')
 def showHome():
     """ Renders the homepage of the classifieds app """
+
     items = session.query(Item).order_by(desc(Item.id))
     categories = session.query(Category).order_by(asc(Category.name))
     title = "Recently added items"
@@ -341,6 +351,7 @@ def showHome():
 @app.route('/classifieds/<int:category_id>/items')
 def categoryItems(category_id):
     """ Renders all items for a given category by its id """
+
     categories = session.query(Category).order_by(asc(Category.name))
     category = session.query(Category).filter_by(id=category_id).one()
     items = session.query(Item).filter_by(category_id=category_id) \
@@ -360,6 +371,7 @@ def categoryItems(category_id):
 @login_required
 def addCategory():
     """ Allows logged in users to create a new category """
+
     if request.method == 'POST':
         category = Category(name=request.form['name'],
                             user_id=login_session['user_id'])
@@ -405,6 +417,7 @@ def editCategory(category_id):
 @login_required
 def deleteCategory(category_id):
     """ Allows logged in users to delete categories they own """
+
     category = session.query(Category).filter_by(id=category_id).one()
     itemCount = session.query(Item).filter_by(category_id=category_id).count()
 
@@ -460,6 +473,7 @@ def addItem(category_id):
 @app.route('/classifieds/item/<int:item_id>', methods=['GET', 'POST'])
 def showItem(item_id):
     """ Renders an item page by its item id """
+
     item = session.query(Item).filter_by(id=item_id).one()
     title = item.name
     creator = getUserInfo(item.user_id)
@@ -542,6 +556,7 @@ def disconnect():
     Handles how users logout by calling the
     appropriate disconnect function
     """
+
     if 'provider' in login_session:
         if login_session['provider'] == 'google':
             gdisconnect()
