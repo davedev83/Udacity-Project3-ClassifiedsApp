@@ -13,6 +13,7 @@ ClassifiedsApp is a simple python classfieds app that allows a user to create ca
   - python
   - sqlalchemy
   - flask
+  - flask-seasurf (run ```pip install flask-seasurf``` to install module)
 
 ##### How to run
 ---
