@@ -140,6 +140,7 @@ def fbdisconnect():
     result = h.request(url, 'DELETE')[1]
     return "you have been logged out"
 
+
 @csrf.exempt
 @app.route('/gconnect', methods=['POST'])
 def gconnect():
@@ -514,7 +515,7 @@ def editItem(item_id):
 @login_required
 def deleteItem(item_id):
     """ Handles how users delete items they own """
-    
+
     item = session.query(Item).filter_by(id=item_id).one()
     title = "Remove item"
     if item.user_id != login_session['user_id']:
